@@ -1,0 +1,299 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
+      }
+    },
+    "dns": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name suffix for the Public IP used to access the Virtual Machines."
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
+    "mastersCount": 3
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[variables('location')]",
+      "properties": {
+        "accountType": "Standard_LRS"
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "MyVNET",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "Subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat('jenkinsIP',copyIndex())]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "ipLoop",
+        "count": "[variables('mastersCount')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('jenkins-', copyIndex(), '-', parameters('dns'))]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('jenkinsNic',copyIndex())]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[variables('mastersCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/jenkinsIP',copyIndex())]",
+        "Microsoft.Network/virtualNetworks/MyVNET"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[concat('ipconfig',copyIndex())]",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[concat('10.0.0.', copyIndex(100))]",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('jenkinsIP',copyIndex()))]"
+              },
+              "subnet": {
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','MyVNET'), '/subnets/Subnet')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat('jenkins-',copyIndex())]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "VMsLoop",
+        "count": "[variables('mastersCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/jenkinsNic',copyIndex())]",
+        "Microsoft.Compute/virtualMachines/operations-center"
+      ],
+      "plan": {
+        "name": "cloudbees-jenkins-enterprise-14-11",
+        "publisher": "cloudbees-enterprise-jenkins",
+        "product": "cloudbees-jenkins-enterprise"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_A2"
+        },
+        "osProfile": {
+          "computerName": "[concat('jenkins-',copyIndex(),'-',parameters('dns'))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "customData": "[base64(variable('mastersCount'))]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "cloudbees-enterprise-jenkins",
+            "offer": "cloudbees-jenkins-enterprise",
+            "sku": "cloudbees-jenkins-enterprise-14-11",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/jenkins-',copyIndex(),'.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('jenkinsNic',copyIndex()))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-05-01-preview",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "[concat('jenkins-',copyIndex(),'/CustomScript')]",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/jenkins-',copyIndex())]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.2",
+            "settings": {
+              "fileUris": [ "https://raw.githubusercontent.com/ndeloof/azure-templates/master/setup-master.sh" ],
+              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'))]"
+            }
+          }
+        }
+      ]
+    },
+
+
+
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "ocIP",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('operations-center-',parameters('dns'))]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "ocNic",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "Microsoft.Network/publicIPAddresses/ocIP",
+        "Microsoft.Network/virtualNetworks/MyVNET"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig-oc",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "10.0.0.10",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses','ocIP')]"
+              },
+              "subnet": {
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','MyVNET'), '/subnets/Subnet')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "operations-center",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
+        "Microsoft.Network/networkInterfaces/ocNic"
+      ],
+      "plan": {
+        "name": "cloudbees-jenkins-operations-center-14-11",
+        "publisher": "cloudbees-enterprise-jenkins",
+        "product": "cloudbees-jenkins-operations-center"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_A2"
+        },
+        "osProfile": {
+          "computerName": "[concat('operations-center-', parameters('dns'))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "cloudbees-enterprise-jenkins",
+            "offer": "cloudbees-jenkins-operations-center",
+            "sku": "cloudbees-jenkins-operations-center-14-11",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/operations-center.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','ocNic')]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-05-01-preview",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "operations-center/CustomScript",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "Microsoft.Compute/virtualMachines/operations-center"
+          ],
+          "properties": {
+            "publisher": "Microsoft.OSTCExtensions",
+            "type": "CustomScriptForLinux",
+            "typeHandlerVersion": "1.2",
+            "settings": {
+              "fileUris": [ "https://raw.githubusercontent.com/ndeloof/azure-templates/master/setup-operations-center.sh" ],
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'))]"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {}
+}

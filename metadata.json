@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "CloudBees Jenkins Platform",
+  "description": "This template allows you to create a set of Virtual Machines to run CloudBees Jenkins Platform",
+  "summary": "Deploy CloudBees Jenkins Platform",
+  "githubUsername": "cloudbees",
+  "dateUpdated": "2016-01-05"
+}
