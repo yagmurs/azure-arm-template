@@ -30,7 +30,10 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
-    "mastersCount": 3
+    "mastersCount": 1,
+    "executorsCount":10,
+    "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
+    "executorsProperty": "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.executors=',variables('executorsCount'))]"
   },
   "resources": [
     {
@@ -136,8 +139,7 @@
         "osProfile": {
           "computerName": "[concat('jenkins-',copyIndex(),'-',parameters('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]",
-          "customData": "[base64(variable('mastersCount'))]"
+          "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
           "imageReference": {
@@ -247,7 +249,8 @@
         "osProfile": {
           "computerName": "[concat('operations-center-', parameters('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminPassword": "[parameters('adminPassword')]",
+          "customData": "[base64(concat(variables('mastersProperty'), '\n', variables('executorsProperty')))]"
         },
         "storageProfile": {
           "imageReference": {

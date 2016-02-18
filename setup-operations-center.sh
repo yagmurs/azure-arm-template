@@ -11,17 +11,22 @@ set -e
 # Azure ARM setup script to prepare a CJOC VM for integration within CJP
 #
 # usage:
-#   setup-operations-center.sh <index_of_master_node> <dns_domain_name>
+#   setup-operations-center.sh <number_of_masters> <dns_domain_name>
 #
 
-index=$1
+masters=$1
 domain=$2
+
+# unique ID of this VM
+uid=`dmidecode | grep UUID | cut -d' ' -f2`
+
+
 
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
 curl https://raw.githubusercontent.com/ndeloof/azure-templates/master/oc-init-masters.groovy -o $INIT
 
-sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$index/" "$INIT"
+sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
 
 chown jenkins-oc:jenkins-oc $INIT
 
