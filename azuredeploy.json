@@ -179,7 +179,7 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "https://raw.githubusercontent.com/ndeloof/azure-templates/master/setup-master.sh" ],
+              "fileUris": [ "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/setup-master.sh" ],
               "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'))]"
             }
           }
@@ -290,7 +290,7 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "https://raw.githubusercontent.com/ndeloof/azure-templates/master/setup-operations-center.sh" ],
+              "fileUris": [ "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/setup-operations-center.sh" ],
               "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'))]"
             }
           }

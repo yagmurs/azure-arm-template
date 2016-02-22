@@ -24,7 +24,7 @@ uid=`dmidecode | grep UUID | cut -d' ' -f2`
 
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
-curl https://raw.githubusercontent.com/ndeloof/azure-templates/master/oc-init-masters.groovy -o $INIT
+curl https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/oc-init-masters.groovy -o $INIT
 
 sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
 
