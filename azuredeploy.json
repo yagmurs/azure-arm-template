@@ -25,12 +25,18 @@
       "metadata": {
         "description": "Password for the Virtual Machine."
       }
+    },
+    "masters": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of Jenkins masters."
+      }
     }
   },
   "variables": {
     "location": "[resourceGroup().location]",
     "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
-    "mastersCount": 1,
+    "mastersCount": "[parameters('masters')]",
     "executorsCount":10,
     "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
     "executorsProperty": "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.executors=',variables('executorsCount'))]"
