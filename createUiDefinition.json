@@ -1,0 +1,122 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.0.1-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "masters",
+        "type": "Microsoft.Common.DropDown",
+        "label": "Number of Jenkins masters",
+        "defaultValue": "2",
+        "toolTip": "Number of Jenkins masters",
+        "constraints": {
+          "allowedValues": [
+            {
+              "label": "2",
+              "value": "2"
+            },
+            {
+              "label": "4",
+              "value": "4"
+            },
+            {
+              "label": "8",
+              "value": "8"
+            },
+            {
+              "label": "16",
+              "value": "16"
+            }
+          ]
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "VM username",
+        "toolTip": "Administrative username for the virtual machines.",
+        "osPlatform": "Linux",
+        "constraints": {
+          "required": true
+        }
+      },
+      {
+        "name": "adminCredentials",
+        "type": "Microsoft.Compute.CredentialsCombo",
+        "label": {
+          "authenticationType": "Authentication type",
+          "password": "Password",
+          "confirmPassword": "Confirm password",
+          "sshPublicKey": "SSH public key"
+        },
+        "constraints": {
+          "required": true
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+        "osPlatform": "Linux"
+      }
+    ],
+    "steps": [
+      {
+        "name": "deploymentDetails",
+        "label": "Deployment Parameters",
+        "subLabel": {
+          "preValidation": "Required",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Deployment Parameters",
+        "elements": [
+          {
+            "name": "publicIp",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address",
+              "domainNameLabel": "Domain Name prefix"
+            },
+            "defaultValue": {
+              "publicIpAddressName": "frontEndIp"
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
+            },
+            "options": {
+              "hideNone": true,
+              "hideDomainNameLabel": false,
+              "hideExisting": true
+            }
+          },
+          {
+            "name": "storageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Storage account",
+            "toolTip": "Storage account where the VM disks will be stored.",
+            "defaultValue": {
+              "type": "Standard_LRS"
+            },
+            "constraints": {
+              "required": true,
+              "excludedTypes": [
+                "Premium_LRS"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "publicIPAddressName": "[steps('deploymentDetails').publicIp.name]",
+
+      "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
+      "dns": "[steps('deploymentDetails').publicIp.domainNameLabel]",
+      "adminUsername": "[basics('adminUsername')]",
+      "adminPassword": "[basics('adminCredentials').password]",
+      "masters": "[basic('masters')]",
+
+      "location": "[location()]"
+    }
+  }
+}
