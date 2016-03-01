@@ -4,28 +4,23 @@
   "parameters": {
     "basics": [
       {
-        "name": "masters",
+        "name": "size",
         "type": "Microsoft.Common.DropDown",
-        "label": "Number of Jenkins masters",
-        "defaultValue": "2",
-        "toolTip": "Number of Jenkins masters",
+        "label": "Deployment size",
+        "defaultValue": "Starter",
         "constraints": {
           "allowedValues": [
             {
-              "label": "2",
-              "value": "2"
+              "label": "Starter",
+              "value": "Starter"
             },
             {
-              "label": "4",
-              "value": "4"
+              "label": "Medium",
+              "value": "Medium"
             },
             {
-              "label": "8",
-              "value": "8"
-            },
-            {
-              "label": "16",
-              "value": "16"
+              "label": "Large",
+              "value": "Large"
             }
           ]
         }
@@ -59,6 +54,18 @@
       }
     ],
     "steps": [
+      {
+        "name": "size",
+        "label": "Size",
+        "subLabel": {
+          "preValidation": "Choose virtual machine size",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Size",
+        "elements": [
+
+        ]
+      },
       {
         "name": "deploymentDetails",
         "label": "Deployment Parameters",
@@ -114,7 +121,7 @@
       "dns": "[steps('deploymentDetails').publicIp.domainNameLabel]",
       "adminUsername": "[basics('adminUsername')]",
       "adminPassword": "[basics('adminCredentials').password]",
-      "masters": "[basic('masters')]",
+      "size": "[basics('size')]",
 
       "location": "[location()]"
     }
