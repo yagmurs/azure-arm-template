@@ -85,13 +85,7 @@
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
       }
-},
-    "masters": {
-      "type": "int",
-      "metadata": {
-        "description": "Number of Jenkins masters."
-      }
-    }
+    },
   },
 
 
