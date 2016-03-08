@@ -63,7 +63,26 @@
         },
         "bladeTitle": "Size",
         "elements": [
-
+          {
+            "name": "vmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "VM size",
+            "toolTip": "The size of virtual machines.",
+            "recommendedSizes": [
+              "Standard_A2",
+              "Standard_A3",
+              "Standard_A4",
+              "Standard_DS1",
+              "Standard_DS2",
+              "Standard_DS3"
+            ],
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "cloudbees",
+              "offer": "jenkins-enterprise",
+              "sku": "jenkins-enterprise"
+            }
+          }
         ]
       },
       {
@@ -76,24 +95,12 @@
         "bladeTitle": "Deployment Parameters",
         "elements": [
           {
-            "name": "publicIp",
-            "type": "Microsoft.Network.PublicIpAddressCombo",
-            "label": {
-              "publicIpAddress": "Public IP address",
-              "domainNameLabel": "Domain Name prefix"
-            },
-            "defaultValue": {
-              "publicIpAddressName": "frontEndIp"
-            },
+            "name": "dns",
+            "type": "Microsoft.Common.TextBox",
+            "label": "DNS name prefix",
+            "toolTip": "Prefix for virtual machines DNS name.",
             "constraints": {
-              "required": {
-                "domainNameLabel": true
-              }
-            },
-            "options": {
-              "hideNone": true,
-              "hideDomainNameLabel": false,
-              "hideExisting": true
+              "required": true
             }
           },
           {
@@ -121,10 +128,9 @@
       "adminPassword": "[basics('adminCredentials').password]",
       "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 
-      "publicIPAddressName": "[steps('deploymentDetails').publicIp.name]",
-
-      "dns": "[steps('deploymentDetails').publicIp.domainNameLabel]",
+      "dns": "[steps('deploymentDetails').dns]",
       "size": "[basics('size')]",
+      "vmSize": "[steps('size').vmSize]",
 
       "location": "[location()]"
     }

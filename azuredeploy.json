@@ -45,15 +45,7 @@
       "metadata": {
         "description": "VM Size"
       },
-      "defaultValue": "Standard_A2",
-      "allowedValues": [
-        "Standard_A2",
-        "Standard_A3",
-        "Standard_A4",
-        "Standard_DS1",
-        "Standard_DS2",
-        "Standard_DS3"
-      ]
+      "defaultValue": "Standard_A2"
     },
     "size": {
       "type": "string",
