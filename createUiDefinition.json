@@ -107,22 +107,27 @@
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage account",
-            "toolTip": "Storage account where the VM disks will be stored.",
+            "toolTip": "Storage Account for the Virtual Machine's Disks",
             "defaultValue": {
               "type": "Standard_LRS"
             },
             "constraints": {
-              "required": true,
-              "excludedTypes": [
+              "allowedTypes": [
+                "Standard_LRS",
+                "Standard_GRS",
                 "Premium_LRS"
-              ]
+              ],
+              "required": true
             }
           }
         ]
       }
     ],
     "outputs": {
+      "storageAccountNewOrExisting": "[steps('deploymentDetails').storageAccount.newOrExisting]",
       "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
+      "storageAccountType": "[steps('deploymentDetails').storageAccount.type]",
+
       "adminUsername": "[basics('adminUsername')]",
       "authenticationType": "[basics('adminCredentials').authenticationType]",
       "adminPassword": "[basics('adminCredentials').password]",

@@ -2,12 +2,39 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0",
   "parameters": {
+
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL for Marketplace",
+        "artifactsBaseUrl": ""
+      },
+      "defaultValue": "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master"
+    },
+
+    "storageAccountNewOrExisting": {
+      "type": "string",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
         "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
       }
     },
+    "storageAccountType": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_ZRS",
+        "Premium_LRS"
+      ]
+    },
+
     "dns": {
       "type": "string",
       "metadata": {
@@ -69,21 +96,25 @@
 
 
   "variables": {
+    "location": "[resourceGroup().location]",
+
     "clusterSpecSmall": {
       "numberOfMasters": 1,
       "numberOfExecutors": 10
     },
-      "clusterSpecMedium": {
+    "clusterSpecMedium": {
         "numberOfMasters": 3,
         "numberOfExecutors": 50
-    },
+      },
     "clusterSpecLarge": {
       "numberOfMasters": 5,
       "numberOfExecutors": 100
     },
-    "location": "[resourceGroup().location]",
-    "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "clusterSpec": "[variables(concat('clusterSpec', parameters('size')))]",
+
+    "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
+
+    "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
     "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
@@ -107,15 +138,31 @@
 
 
   "resources": [
+
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('storageAccountName')]",
-      "apiVersion": "2015-05-01-preview",
-      "location": "[variables('location')]",
+      "apiVersion": "2015-01-01",
+      "name": "storageTemplate",
+      "type": "Microsoft.Resources/deployments",
       "properties": {
-        "accountType": "Standard_LRS"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('storageAccountName')]"
+          },
+          "storageAccountType": {
+            "value" : "[parameters('storageAccountType')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        }
       }
     },
+
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/virtualNetworks",
