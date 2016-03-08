@@ -14,6 +14,20 @@
         "description": "Unique DNS Name suffix for the Public IP used to access the Virtual Machines."
       }
     },
+    "authenticationType": {
+      "type": "string",
+      "allowedValues": [
+        "password",
+        "sshPublicKey"
+      ]
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "SSH RSA public key file as a string. Not used if authenticationType of password."
+      }
+    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -60,6 +74,8 @@
       }
     }
   },
+
+
   "variables": {
     "clusterSpecSmall": {
       "numberOfMasters": 1,
@@ -79,8 +95,25 @@
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
     "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
-    "executorsProperty": "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.executors=',variables('executorsCount'))]"
+    "executorsProperty": "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.executors=',variables('executorsCount'))]",
+
+    "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+    "linuxConfiguration_sshPublicKey": {
+      "disablePasswordAuthentication": "true",
+      "ssh": {
+        "publicKeys": [
+          {
+            "path": "[variables('sshKeyPath')]",
+            "keyData": "[parameters('sshPublicKey')]"
+          }
+        ]
+      }
+    },
+    "linuxConfiguration_password": {},
+    "linuxConfiguration": "[variables(concat('linuxConfiguration_', parameters('authenticationType')))]"
   },
+
+
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
@@ -174,8 +207,8 @@
         "Microsoft.Compute/virtualMachines/operations-center"
       ],
       "plan": {
-        "name": "cloudbees-jenkins-enterprise-14-11",
-        "publisher": "cloudbees-enterprise-jenkins",
+        "name": "cloudbees-jenkins-enterprise",
+        "publisher": "cloudbees",
         "product": "cloudbees-jenkins-enterprise"
       },
       "properties": {
@@ -185,13 +218,14 @@
         "osProfile": {
           "computerName": "[concat('jenkins-',copyIndex(),'-',parameters('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminPassword": "[parameters('adminPassword')]",
+          "linuxConfiguration": "[variables('linuxConfiguration')]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "cloudbees-enterprise-jenkins",
-            "offer": "cloudbees-jenkins-enterprise",
-            "sku": "cloudbees-jenkins-enterprise-14-11",
+            "publisher": "cloudbees",
+            "offer": "jenkins-enterprise",
+            "sku": "jenkins-enterprise",
             "version": "latest"
           },
           "osDisk": {
@@ -285,8 +319,8 @@
       ],
       "plan": {
         "name": "cloudbees-jenkins-operations-center-14-11",
-        "publisher": "cloudbees-enterprise-jenkins",
-        "product": "cloudbees-jenkins-operations-center"
+        "publisher": "enterprise-jenkins",
+        "product": "jenkins-operations-center"
       },
       "properties": {
         "hardwareProfile": {
@@ -296,13 +330,14 @@
           "computerName": "[concat('operations-center-', parameters('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
+          "linuxConfiguration": "[variables('linuxConfiguration')]",
           "customData": "[base64(concat(variables('mastersProperty'), '\n', variables('executorsProperty')))]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "cloudbees-enterprise-jenkins",
-            "offer": "cloudbees-jenkins-operations-center",
-            "sku": "cloudbees-jenkins-operations-center-14-11",
+            "publisher": "cloudbees",
+            "offer": "jenkins-operations-center",
+            "sku": "jenkins-operations-center",
             "version": "latest"
           },
           "osDisk": {

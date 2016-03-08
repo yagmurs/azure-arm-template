@@ -115,12 +115,15 @@
       }
     ],
     "outputs": {
+      "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
+      "adminUsername": "[basics('adminUsername')]",
+      "authenticationType": "[basics('adminCredentials').authenticationType]",
+      "adminPassword": "[basics('adminCredentials').password]",
+      "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
+
       "publicIPAddressName": "[steps('deploymentDetails').publicIp.name]",
 
-      "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
       "dns": "[steps('deploymentDetails').publicIp.domainNameLabel]",
-      "adminUsername": "[basics('adminUsername')]",
-      "adminPassword": "[basics('adminCredentials').password]",
       "size": "[basics('size')]",
 
       "location": "[location()]"
