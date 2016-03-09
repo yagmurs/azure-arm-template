@@ -292,8 +292,8 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/setup-master.sh" ],
-              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'))]"
+              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh']" ],
+              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
             }
           }
         }
@@ -404,8 +404,8 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/setup-operations-center.sh" ],
-              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'))]"
+              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh']" ],
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
             }
           }
         }

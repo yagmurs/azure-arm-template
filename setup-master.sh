@@ -11,11 +11,12 @@ set -e
 # Azure ARM setup script to prepare a CJE VM for integration for integration within CJP
 #
 # usage:
-#   setup-master.sh <index_of_master_node> <dns_domain_name>
+#   setup-master.sh <index_of_master_node> <dns_domain_name> <template_root_url>
 #
 
 index=$1
 domain=$2
+rooturl=$2
 
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details

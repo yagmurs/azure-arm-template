@@ -11,11 +11,12 @@ set -e
 # Azure ARM setup script to prepare a CJOC VM for integration within CJP
 #
 # usage:
-#   setup-operations-center.sh <number_of_masters> <dns_domain_name>
+#   setup-operations-center.sh <number_of_masters> <dns_domain_name> <template_root_url>
 #
 
 masters=$1
 domain=$2
+rooturl=$2
 
 # unique ID of this VM
 uid=`dmidecode | grep UUID | cut -d' ' -f2`
@@ -24,7 +25,7 @@ uid=`dmidecode | grep UUID | cut -d' ' -f2`
 
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
-curl https://raw.githubusercontent.com/cloudbees/azure-arm-template/master/oc-init-masters.groovy -o $INIT
+curl $rooturl/oc-init-masters.groovy -o $INIT
 
 sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
 
