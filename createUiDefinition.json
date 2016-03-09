@@ -32,7 +32,8 @@
         "toolTip": "Administrative username for the virtual machines.",
         "osPlatform": "Linux",
         "constraints": {
-          "required": true
+          "required": true,
+          "regex": "^[a-z][-a-z0-9]*$"
         }
       },
       {
@@ -95,15 +96,6 @@
         "bladeTitle": "Deployment Parameters",
         "elements": [
           {
-            "name": "dns",
-            "type": "Microsoft.Common.TextBox",
-            "label": "DNS name prefix",
-            "toolTip": "Prefix for virtual machines DNS name.",
-            "constraints": {
-              "required": true
-            }
-          },
-          {
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage account",
@@ -133,7 +125,6 @@
       "adminPassword": "[basics('adminCredentials').password]",
       "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 
-      "dns": "[steps('deploymentDetails').dns]",
       "size": "[basics('size')]",
       "vmSize": "[steps('size').vmSize]",
 

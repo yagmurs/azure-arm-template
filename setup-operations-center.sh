@@ -16,7 +16,7 @@ set -e
 
 masters=$1
 domain=$2
-rooturl=$2
+rooturl=$3
 
 # unique ID of this VM
 uid=`dmidecode | grep UUID | cut -d' ' -f2`

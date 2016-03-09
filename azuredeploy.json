@@ -35,12 +35,6 @@
       ]
     },
 
-    "dns": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name suffix for the Public IP used to access the Virtual Machines."
-      }
-    },
     "authenticationType": {
       "type": "string",
       "allowedValues": [
@@ -63,6 +57,7 @@
     },
     "adminPassword": {
       "type": "securestring",
+      "defaultValue": "",
       "metadata": {
         "description": "Password for the Virtual Machine."
       }
@@ -85,14 +80,14 @@
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
       }
-    },
+    }
   },
 
 
   "variables": {
     "location": "[resourceGroup().location]",
 
-    "clusterSpecSmall": {
+    "clusterSpecStarter": {
       "numberOfMasters": 1,
       "numberOfExecutors": 10
     },
@@ -108,7 +103,8 @@
 
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
 
-    "FQdns": "[concat(parameters('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
+    "dns": "[resourceGroup().name]",
+    "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
     "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
@@ -151,7 +147,7 @@
             "value" : "[parameters('storageAccountType')]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[variables('location')]"
           }
         }
       }
@@ -190,7 +186,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat('jenkins-', copyIndex(), '-', parameters('dns'))]"
+          "domainNameLabel": "[concat('jenkins-', copyIndex(), '-', variables('dns'))]"
         }
       }
     },
@@ -235,21 +231,21 @@
         "count": "[variables('mastersCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
+        "Microsoft.Resources/deployments/storageTemplate",
         "[concat('Microsoft.Network/networkInterfaces/jenkinsNic',copyIndex())]",
         "Microsoft.Compute/virtualMachines/operations-center"
       ],
       "plan": {
-        "name": "cloudbees-jenkins-enterprise",
+        "name": "jenkins-enterprise",
         "publisher": "cloudbees",
-        "product": "cloudbees-jenkins-enterprise"
+        "product": "jenkins-enterprise"
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('wmSize')]"
+          "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('jenkins-',copyIndex(),'-',parameters('dns'))]",
+          "computerName": "[concat('jenkins-',copyIndex(),'-',variables('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
@@ -292,7 +288,7 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh']" ],
+              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh')]" ],
               "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
             }
           }
@@ -310,7 +306,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat('operations-center-',parameters('dns'))]"
+          "domainNameLabel": "[concat('operations-center-',variables('dns'))]"
         }
       }
     },
@@ -347,20 +343,20 @@
       "name": "operations-center",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
+        "Microsoft.Resources/deployments/storageTemplate",
         "Microsoft.Network/networkInterfaces/ocNic"
       ],
       "plan": {
-        "name": "cloudbees-jenkins-operations-center-14-11",
-        "publisher": "enterprise-jenkins",
+        "name": "jenkins-operations-center",
+        "publisher": "cloudbees",
         "product": "jenkins-operations-center"
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('wmSize')]"
+          "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('operations-center-', parameters('dns'))]",
+          "computerName": "[concat('operations-center-', variables('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]",
@@ -404,7 +400,7 @@
             "type": "CustomScriptForLinux",
             "typeHandlerVersion": "1.2",
             "settings": {
-              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh']" ],
+              "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
               "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
             }
           }
