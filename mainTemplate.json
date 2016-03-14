@@ -11,6 +11,12 @@
       },
       "defaultValue": "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master"
     },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location where the solution will be deployed."
+      }
+    },
 
     "storageAccountNewOrExisting": {
       "type": "string",

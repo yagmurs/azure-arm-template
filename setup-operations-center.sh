@@ -19,9 +19,14 @@ domain=$2
 rooturl=$3
 
 # unique ID of this VM
-uid=`dmidecode | grep UUID | cut -d' ' -f2`
+uuid=`dmidecode | grep UUID | cut -d' ' -f2`
+# Allow jenkins user to run `sudo dmidecode`
+echo "dmidecode      ALL = jenkins dmidecode" >> /etc/sudoers
 
+apt-get install -y xml2
 
+# Extract licensing metadata from CloudInit config and inject as encrypted file to discourage (bad) hackers
+cat /var/lib/waagent/ovf-env.xml | xml2 | sed -n 's/^.*CustomData=//p' | base64 --decode | openssl enc -des3 -k $uuid  -out /var/lib/jenkins-oc/license.des
 
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
