@@ -21,7 +21,7 @@ rooturl=$3
 # unique ID of this VM
 uuid=`dmidecode | grep UUID | cut -d' ' -f2`
 # Allow jenkins user to run `sudo dmidecode`
-echo "dmidecode      ALL = jenkins dmidecode" >> /etc/sudoers
+echo "jenkins ALL=(ALL) dmidecode" >> /etc/sudoers.d/jenkins
 
 apt-get install -y xml2
 
