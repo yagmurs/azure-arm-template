@@ -160,7 +160,7 @@
     },
 
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "MyVNET",
       "location": "[variables('location')]",
@@ -181,7 +181,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('jenkinsIP',copyIndex())]",
       "location": "[variables('location')]",
@@ -197,7 +197,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('jenkinsNic',copyIndex())]",
       "location": "[variables('location')]",
@@ -228,7 +228,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('jenkins-',copyIndex())]",
       "location": "[variables('location')]",
@@ -282,7 +282,7 @@
       },
       "resources": [
         {
-          "apiVersion": "2015-05-01-preview",
+          "apiVersion": "2016-03-30",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "[concat('jenkins-',copyIndex(),'/CustomScript')]",
           "location": "[variables('location')]",
@@ -305,7 +305,7 @@
 
 
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "ocIP",
       "location": "[variables('location')]",
@@ -317,7 +317,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "ocNic",
       "location": "[variables('location')]",
@@ -344,7 +344,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "operations-center",
       "location": "[variables('location')]",
@@ -394,7 +394,7 @@
       },
       "resources": [
         {
-          "apiVersion": "2015-05-01-preview",
+          "apiVersion": "2016-03-30",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "operations-center/CustomScript",
           "location": "[variables('location')]",
@@ -413,6 +413,19 @@
         }
       ]
     }
+
+
+
   ],
-  "outputs": {}
+  "outputs": {
+    "ocDNS": {
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP'),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "type": "string"
+    },
+    "ocIP": {
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP'),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).ipAddress]",
+      "type": "string"
+    }
+
+  }
 }
