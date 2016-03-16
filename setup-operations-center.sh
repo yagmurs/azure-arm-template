@@ -14,6 +14,14 @@ set -e
 #   setup-operations-center.sh <number_of_masters> <dns_domain_name> <template_root_url>
 #
 
+
+function finish {
+  # delete myslef. We don't want to assist people in hacking our licensing stuff
+  rm -- "$0"
+}
+trap finish EXIT
+
+
 masters=$1
 domain=$2
 rooturl=$3
@@ -21,7 +29,7 @@ rooturl=$3
 # unique ID of this VM
 uuid=`dmidecode | grep UUID | cut -d' ' -f2`
 # Allow jenkins user to run `sudo dmidecode`
-echo "jenkins ALL=(ALL) dmidecode" >> /etc/sudoers.d/jenkins
+echo "jenkins ALL=(ALL) dmidecode" >> /etc/sudoers.d/dmidecode
 
 apt-get install -y xml2
 
