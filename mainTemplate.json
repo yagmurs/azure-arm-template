@@ -292,7 +292,7 @@
           "properties": {
             "publisher": "Microsoft.OSTCExtensions",
             "type": "CustomScriptForLinux",
-            "typeHandlerVersion": "1.2",
+            "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh')]" ],
               "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
@@ -404,7 +404,7 @@
           "properties": {
             "publisher": "Microsoft.OSTCExtensions",
             "type": "CustomScriptForLinux",
-            "typeHandlerVersion": "1.2",
+            "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
               "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
