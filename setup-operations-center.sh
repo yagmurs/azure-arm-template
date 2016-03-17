@@ -20,13 +20,15 @@ function finish {
 }
 trap finish EXIT
 
+# FIXME refresh VM image ?
+apt-get update ; apt-get install -y --only-upgrade walinuxagent
 
 masters=$1
 domain=$2
 rooturl=$3
 
 # unique ID of this VM
-uuid=`dmidecode | grep UUID | cut -d' ' -f2`
+uuid=`dmidecode -s system-uuid`
 # Allow jenkins user to run `sudo dmidecode`
 echo "jenkins-oc ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode" >> /etc/sudoers.d/dmidecode
 

@@ -17,6 +17,9 @@ index=$1
 domain=$2
 rooturl=$2
 
+# FIXME refresh VM image ?
+apt-get update ; apt-get install -y --only-upgrade walinuxagent
+
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details
 echo "<?xml version='1.0' encoding='UTF-8'?>
