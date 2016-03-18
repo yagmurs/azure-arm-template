@@ -113,8 +113,8 @@
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
-    "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.masters=',variables('mastersCount'))]",
-    "executorsProperty": "[concat('com.cloudbees.jenkins.plugins.azure.AzureMarketplaceLicenseProvider.executors=',variables('executorsCount'))]",
+    "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.masters=',variables('mastersCount'))]",
+    "executorsProperty": "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.executors=',variables('executorsCount'))]",
 
     "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
     "linuxConfiguration_sshPublicKey": {
