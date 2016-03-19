@@ -72,10 +72,7 @@
             "recommendedSizes": [
               "Standard_A2",
               "Standard_A3",
-              "Standard_A4",
-              "Standard_DS1",
-              "Standard_DS2",
-              "Standard_DS3"
+              "Standard_A4"
             ],
             "osPlatform": "Linux",
             "imageReference": {

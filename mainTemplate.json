@@ -418,14 +418,9 @@
 
   ],
   "outputs": {
-    "ocDNS": {
+    "operations-center": {
       "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP'),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
       "type": "string"
-    },
-    "ocIP": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP'),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).ipAddress]",
-      "type": "string"
     }
-
   }
 }
