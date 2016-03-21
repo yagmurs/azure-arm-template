@@ -9,7 +9,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/cloudbees/azure-arm-template/master"
+      "defaultValue": "https://raw.githubusercontent.com/cloudbees/azure-arm-template/byol"
     },
     "location": {
       "type": "string",
