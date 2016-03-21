@@ -5,24 +5,12 @@
     "basics": [
       {
         "name": "size",
-        "type": "Microsoft.Common.DropDown",
-        "label": "Deployment size",
-        "defaultValue": "Starter",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Number of Jenkins masters",
+        "defaultValue": "1",
         "constraints": {
-          "allowedValues": [
-            {
-              "label": "Starter",
-              "value": "Starter"
-            },
-            {
-              "label": "Medium",
-              "value": "Medium"
-            },
-            {
-              "label": "Large",
-              "value": "Large"
-            }
-          ]
+          "required": true,
+          "regex": "^[0-9]+$"
         }
       },
       {
