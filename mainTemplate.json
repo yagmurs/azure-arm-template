@@ -76,13 +76,7 @@
       "defaultValue": "Standard_A2"
     },
     "size": {
-      "type": "string",
-      "defaultValue": "Starter",
-      "allowedValues": [
-        "Starter",
-        "Medium",
-        "Large"
-      ],
+      "type": "int",
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
       }
@@ -93,28 +87,11 @@
   "variables": {
     "location": "[resourceGroup().location]",
 
-    "clusterSpecStarter": {
-      "numberOfMasters": 1,
-      "numberOfExecutors": 10
-    },
-    "clusterSpecMedium": {
-        "numberOfMasters": 3,
-        "numberOfExecutors": 50
-      },
-    "clusterSpecLarge": {
-      "numberOfMasters": 5,
-      "numberOfExecutors": 100
-    },
-    "clusterSpec": "[variables(concat('clusterSpec', parameters('size')))]",
-
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
 
     "dns": "[resourceGroup().name]",
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
-    "mastersCount": "[variables('clusterSpec').numberOfMasters]",
-    "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
-    "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.masters=',variables('mastersCount'))]",
-    "executorsProperty": "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.executors=',variables('executorsCount'))]",
+    "mastersCount": "[parameters('size')]",
 
     "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
     "linuxConfiguration_sshPublicKey": {
@@ -365,8 +342,7 @@
           "computerName": "[concat('operations-center-', variables('dns'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
-          "linuxConfiguration": "[variables('linuxConfiguration')]",
-          "customData": "[base64(concat(variables('mastersProperty'), '\n', variables('executorsProperty')))]"
+          "linuxConfiguration": "[variables('linuxConfiguration')]"
         },
         "storageProfile": {
           "imageReference": {
