@@ -76,7 +76,7 @@
       "defaultValue": "Standard_A2"
     },
     "size": {
-      "type": "int",
+      "type": "string",
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
       }
