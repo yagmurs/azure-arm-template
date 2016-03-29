@@ -32,11 +32,12 @@ uuid=`dmidecode -s system-uuid`
 # Allow jenkins user to run `sudo dmidecode`
 echo "jenkins-oc ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode" >> /etc/sudoers.d/dmidecode
 
-apt-get install -y xml2
-
 # Extract licensing metadata from CloudInit config and inject as encrypted file to discourage (bad) hackers
 cat /var/lib/waagent/ovf-env.xml | xml2 | sed -n 's/^.*CustomData=//p' | base64 --decode | openssl enc -des3 -k $uuid  -out /var/lib/jenkins-oc/license.des
 
+# Install licensing plugin
+curl $rooturl/operations-center-marketplace-licensing.hpi -o /var/lib/jenkins-oc/plugins/operations-center-marketplace-licensing.hpi
+chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/plugins/operations-center-marketplace-licensing.hpi
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
 curl $rooturl/oc-init-masters.groovy -o $INIT

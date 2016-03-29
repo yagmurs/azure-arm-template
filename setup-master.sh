@@ -15,10 +15,16 @@ set -e
 
 index=$1
 domain=$2
-rooturl=$2
+rooturl=$3
 
-# FIXME refresh VM image ?
-apt-get update ; apt-get install -y --only-upgrade walinuxagent
+
+# Install licensing plugin
+mkdir -p /var/lib/jenkins/plugins
+touch /var/lib/jenkins/plugins/cloudbees-license.jpi.pinned
+curl $rooturl/cloudbees-license.hpi -o /var/lib/jenkins/plugins/cloudbees-license.jpi
+curl $rooturl/client-master-marketplace-licensing.hpi -o /var/lib/jenkins/plugins/client-master-marketplace-licensing.hpi
+chown -R jenkins:jenkins /var/lib/jenkins/
+
 
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details

@@ -95,15 +95,18 @@
 
     "clusterSpecStarter": {
       "numberOfMasters": 1,
-      "numberOfExecutors": 10
+      "numberOfExecutors": 10,
+      "vmImageSku": "jenkins-operations-center-small"
     },
     "clusterSpecMedium": {
-        "numberOfMasters": 3,
-        "numberOfExecutors": 50
+      "numberOfMasters": 3,
+      "numberOfExecutors": 50,
+      "vmImageSku": "jenkins-operations-center-medium"
       },
     "clusterSpecLarge": {
       "numberOfMasters": 5,
-      "numberOfExecutors": 100
+      "numberOfExecutors": 100,
+      "vmImageSku": "jenkins-operations-center-large"
     },
     "clusterSpec": "[variables(concat('clusterSpec', parameters('size')))]",
 
@@ -113,6 +116,7 @@
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
+    "sku": "[variables('clusterSpec').vmImageSku]",
     "mastersProperty" :  "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.masters=',variables('mastersCount'))]",
     "executorsProperty": "[concat('com.cloudbees.jenkins.plugin.marketplace.azure.AzureMarketplace.executors=',variables('executorsCount'))]",
 
@@ -353,7 +357,7 @@
         "Microsoft.Network/networkInterfaces/ocNic"
       ],
       "plan": {
-        "name": "jenkins-operations-center",
+        "name": "[variables('sku')]",
         "publisher": "cloudbees",
         "product": "jenkins-operations-center"
       },
@@ -372,7 +376,7 @@
           "imageReference": {
             "publisher": "cloudbees",
             "offer": "jenkins-operations-center",
-            "sku": "jenkins-operations-center",
+            "sku": "[variables('sku')]",
             "version": "latest"
           },
           "osDisk": {
