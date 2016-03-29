@@ -91,7 +91,7 @@
 
     "dns": "[resourceGroup().name]",
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
-    "mastersCount": "[parameters('size')]",
+    "mastersCount": "[int(parameters('size'))]",
 
     "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
     "linuxConfiguration_sshPublicKey": {
