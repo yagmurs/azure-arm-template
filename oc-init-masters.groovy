@@ -20,7 +20,7 @@ masters.times {
         cm.setId(it)
         cm.setGrantId(grantId);
         cm.getProperties().replace(new ConnectedMasterLicenseServerProperty(new ConnectedMasterLicenseServerProperty.FloatingExecutorsStrategy()));
-        cm.getProperties().replace(new SecurityEnforcer.OptOutProperty(false, TrustedEquivalentRAMF.INSTANCE));
+        cm.getProperties().replace(new SecurityEnforcer.OptOutProperty(false, true, new TrustedEquivalentRAMF()));
         cm.save();
     }
 
