@@ -99,8 +99,8 @@
       "vmImageSku": "jenkins-operations-center-small"
     },
     "clusterSpecMedium": {
-      "numberOfMasters": 3,
-      "numberOfExecutors": 50,
+      "numberOfMasters": 2,
+      "numberOfExecutors": 40,
       "vmImageSku": "jenkins-operations-center-medium"
       },
     "clusterSpecLarge": {
