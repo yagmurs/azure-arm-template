@@ -15,6 +15,12 @@ to generate a dynamic lisence. As azure does not (yet) offer a metadata API, we 
 injecting license details during provisionning, then encrypt using instance UUID. This
 results in a binary file in JENKKINS_HOME, harder to hack.
 
+## References
+
+* ARM templates samples https://github.com/Azure/azure-quickstart-templates
+* Azure Marketplace requirement https://github.com/Azure/azure-marketplace/
+* Draft Marketplace best practices https://drive.google.com/open?id=0BywtocVIFJEDWjg1d2ZWM3UwV2M
+
 ## How to test
 
 One can't test the full template deployment (need to publish, get certified, then push to staging)
