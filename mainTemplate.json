@@ -84,7 +84,7 @@
 
 
   "variables": {
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('location')]",
 
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
 
