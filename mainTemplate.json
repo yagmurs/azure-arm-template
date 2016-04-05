@@ -90,7 +90,7 @@
 
 
   "variables": {
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('location')]",
 
     "clusterSpecStarter": {
       "numberOfMasters": 1,
