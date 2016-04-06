@@ -393,7 +393,7 @@
   ],
   "outputs": {
     "operations-center": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP'),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP')).dnsSettings.fqdn]",
       "type": "string"
     }
   }
