@@ -93,6 +93,28 @@
         "bladeTitle": "Deployment Parameters",
         "elements": [
           {
+            "name": "publicIP",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address",
+              "domainNameLabel": "Domain name label"
+            },
+            "toolTip": {
+              "publicIpAddress": "",
+              "domainNameLabel": ""
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
+            },
+            "options": {
+              "hideNone": true,
+              "hideDomainNameLabel": false,
+              "hideExisting": false
+            }
+          },
+          {
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage account",
@@ -115,6 +137,10 @@
       "storageAccountNewOrExisting": "[steps('deploymentDetails').storageAccount.newOrExisting]",
       "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
       "storageAccountType": "[steps('deploymentDetails').storageAccount.type]",
+
+      "publicIPNewOrExisting": "[steps('deploymentDetails').publicIP.newOrExistingOrNone]",
+      "publicIPName" : "[steps('deploymentDetails').publicIP.name]",
+      "dnsNameForPublicIP" : "[steps('deploymentDetails').publicIP.domainNameLabel]",
 
       "adminUsername": "[basics('adminUsername')]",
       "authenticationType": "[basics('adminCredentials').authenticationType]",

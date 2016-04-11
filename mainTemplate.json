@@ -39,6 +39,23 @@
       ]
     },
 
+    "publicIPNewOrExisting": {
+      "type": "string",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "publicIPName": {
+      "type": "string"
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Jenkins Operations Center Web Front-End."
+      }
+    },
+
     "authenticationType": {
       "type": "string",
       "allowedValues": [
@@ -109,8 +126,9 @@
     "clusterSpec": "[variables(concat('clusterSpec', parameters('size')))]",
 
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
+    "publicIPTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('publicIPNewOrExisting'), 'PublicIP.json')]",
 
-    "dns": "[uniqueString(resourceGroup().id)]",
+    "dns": "[parameters('dnsNameForPublicIP')]",
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[variables('clusterSpec').numberOfMasters]",
     "executorsCount": "[variables('clusterSpec').numberOfExecutors]",
@@ -395,18 +413,30 @@
 
 
     {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "ocIP",
-      "location": "[variables('location')]",
+      "apiVersion": "2015-01-01",
+      "name": "publicIPTemplate",
+      "type": "Microsoft.Resources/deployments",
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[concat('operations-center-',variables('dns'))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('publicIPTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "publicIPName": {
+            "value": "[parameters('publicIPName')]"
+          },
+          "dnsNameForPublicIP": {
+            "value": "[parameters('dnsNameForPublicIP')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
         }
       }
     },
-    {
+
+        {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "ocSecurityGroup",
@@ -492,7 +522,7 @@
       "name": "ocNic",
       "location": "[variables('location')]",
       "dependsOn": [
-        "Microsoft.Network/publicIPAddresses/ocIP",
+        "[concat('Microsoft.Resources/deployments/publicIPTemplate')]",
         "Microsoft.Network/networkSecurityGroups/ocSecurityGroup",
         "Microsoft.Network/virtualNetworks/MyVNET"
       ],
@@ -504,7 +534,7 @@
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "10.0.0.10",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses','ocIP')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPName'))]"
               },
               "subnet": {
                 "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','MyVNET'), '/subnets/Subnet')]"
@@ -593,7 +623,7 @@
   ],
   "outputs": {
     "operations-center": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP')).dnsSettings.fqdn]",
+      "value": "[variables('FQdns')]",
       "type": "string"
     }
   }
