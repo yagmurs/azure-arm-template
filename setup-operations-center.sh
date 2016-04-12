@@ -50,7 +50,7 @@ chown jenkins-oc:jenkins-oc $INIT
 echo "<?xml version='1.0' encoding='UTF-8'?>
 <jenkins.model.JenkinsLocationConfiguration>
   <adminAddress>address not configured yet &lt;nobody@nowhere&gt;</adminAddress>
-  <jenkinsUrl>http://operations-center-$domain/</jenkinsUrl>
+  <jenkinsUrl>http://$domain/</jenkinsUrl>
 </jenkins.model.JenkinsLocationConfiguration>"                                      \
 > /var/lib/jenkins-oc/jenkins.model.JenkinsLocationConfiguration.xml
 
