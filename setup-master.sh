@@ -15,7 +15,7 @@ set -e
 
 index=$1
 domain=$2
-rooturl=$2
+rooturl=$3
 
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details
@@ -24,7 +24,7 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
   <state>CONNECTABLE</state>
   <connectionDetails>----- BEGIN CONNECTION DETAILS -----" > $CFG
 echo "{
-  \"url\": \"http://operations-center-$domain\",
+  \"url\": \"http://$domain\",
   \"id\": \"$index-jenkins-$index%20(built-in)\",
   \"grant\": \"jenkins-$index\"
 }" | gzip -f | base64 >> $CFG

@@ -39,6 +39,23 @@
       ]
     },
 
+    "publicIPNewOrExisting": {
+      "type": "string",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "publicIPName": {
+      "type": "string"
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Jenkins Operations Center Web Front-End."
+      }
+    },
+
     "authenticationType": {
       "type": "string",
       "allowedValues": [
@@ -86,10 +103,12 @@
     "location": "[parameters('location')]",
 
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
+    "publicIPTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('publicIPNewOrExisting'), 'PublicIP.json')]",
 
-    "dns": "[uniqueString(resourceGroup().id)]",
+    "dns": "[parameters('dnsNameForPublicIP')]",
     "FQdns": "[concat(variables('dns'), '.', variables('location'), '.cloudapp.azure.com')]",
     "mastersCount": "[int(parameters('size'))]",
+    "sku": "jenkins-operations-center",
 
     "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
     "linuxConfiguration_sshPublicKey": {
@@ -135,6 +154,87 @@
     },
 
     {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "jenkinsSecurityGroup",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "description": "Allows SSH traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "Git-SSH",
+            "properties": {
+              "description": "Allows SSH traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "2222",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 110,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTP",
+            "properties": {
+              "description": "Allows HTTP traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 120,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTPS",
+            "properties": {
+              "description": "Allows HTTPS traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 130,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "JNLP",
+            "properties": {
+              "description": "Allows JNLP traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "10000",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 140,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+
+    {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "MyVNET",
@@ -172,90 +272,6 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[concat('jenkinsSecurityGroup',copyIndex())]",
-      "location": "[variables('location')]",
-      "copy": {
-        "name": "sgLoop",
-        "count": "[variables('mastersCount')]"
-      },
-      "properties": {
-        "securityRules": [
-          {
-            "name": "SSH",
-            "properties": {
-              "description": "Allows SSH traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Git-SSH",
-            "properties": {
-              "description": "Allows SSH traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "2222",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 110,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "HTTP",
-            "properties": {
-              "description": "Allows HTTP traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "80",
-              "destinationPortRange": "80",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 120,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "HTTPS",
-            "properties": {
-              "description": "Allows HTTPS traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "443",
-              "destinationPortRange": "443",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 130,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "JNLP",
-            "properties": {
-              "description": "Allows JNLP traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "10000",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 140,
-              "direction": "Inbound"
-            }
-          }
-        ]
-      }
-    },
-    {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('jenkinsNic',copyIndex())]",
@@ -266,7 +282,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/jenkinsIP',copyIndex())]",
-        "[concat('Microsoft.Network/networkSecurityGroups/jenkinsSecurityGroup',copyIndex())]",
+        "Microsoft.Network/networkSecurityGroups/jenkinsSecurityGroup",
         "Microsoft.Network/virtualNetworks/MyVNET"
       ],
       "properties": {
@@ -286,7 +302,7 @@
           }
         ],
         "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', concat('jenkinsSecurityGroup',copyIndex()))]"
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'jenkinsSecurityGroup')]"
         }
       }
     },
@@ -368,105 +384,37 @@
 
 
     {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "ocIP",
-      "location": "[variables('location')]",
+      "apiVersion": "2015-01-01",
+      "name": "publicIPTemplate",
+      "type": "Microsoft.Resources/deployments",
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[concat('operations-center-',variables('dns'))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('publicIPTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "publicIPName": {
+            "value": "[parameters('publicIPName')]"
+          },
+          "dnsNameForPublicIP": {
+            "value": "[parameters('dnsNameForPublicIP')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
         }
       }
     },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "ocSecurityGroup",
-      "location": "[variables('location')]",
-      "properties": {
-        "securityRules": [
-          {
-            "name": "SSH",
-            "properties": {
-              "description": "Allows SSH traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Git-SSH",
-            "properties": {
-              "description": "Allows SSH traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "2222",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 110,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "HTTP",
-            "properties": {
-              "description": "Allows HTTP traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "80",
-              "destinationPortRange": "80",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 120,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "HTTPS",
-            "properties": {
-              "description": "Allows HTTPS traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "443",
-              "destinationPortRange": "443",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 130,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "JNLP",
-            "properties": {
-              "description": "Allows JNLP traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "10000",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 140,
-              "direction": "Inbound"
-            }
-          }
-        ]
-      }
-    },
+
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "ocNic",
       "location": "[variables('location')]",
       "dependsOn": [
-        "Microsoft.Network/publicIPAddresses/ocIP",
-        "Microsoft.Network/networkSecurityGroups/ocSecurityGroup",
+        "[concat('Microsoft.Resources/deployments/publicIPTemplate')]",
+        "Microsoft.Network/networkSecurityGroups/jenkinsSecurityGroup",
         "Microsoft.Network/virtualNetworks/MyVNET"
       ],
       "properties": {
@@ -477,7 +425,7 @@
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "10.0.0.10",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses','ocIP')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPName'))]"
               },
               "subnet": {
                 "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','MyVNET'), '/subnets/Subnet')]"
@@ -486,7 +434,7 @@
           }
         ],
         "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'ocSecurityGroup')]"
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'jenkinsSecurityGroup')]"
         }
       }
     },
@@ -500,7 +448,7 @@
         "Microsoft.Network/networkInterfaces/ocNic"
       ],
       "plan": {
-        "name": "jenkins-operations-center",
+        "name": "[variables('sku')]",
         "publisher": "cloudbees",
         "product": "jenkins-operations-center"
       },
@@ -518,7 +466,7 @@
           "imageReference": {
             "publisher": "cloudbees",
             "offer": "jenkins-operations-center",
-            "sku": "jenkins-operations-center",
+            "sku": "[variables('sku')]",
             "version": "latest"
           },
           "osDisk": {
@@ -565,7 +513,7 @@
   ],
   "outputs": {
     "operations-center": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses','ocIP')).dnsSettings.fqdn]",
+      "value": "[variables('FQdns')]",
       "type": "string"
     }
   }
