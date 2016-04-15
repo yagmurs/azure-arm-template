@@ -18,13 +18,6 @@
       }
     },
 
-    "storageAccountNewOrExisting": {
-      "type": "string",
-      "allowedValues": [
-        "new",
-        "existing"
-      ]
-    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
@@ -102,7 +95,7 @@
   "variables": {
     "location": "[parameters('location')]",
 
-    "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('storageAccountNewOrExisting'), 'StorageAccount.json')]",
+    "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/newStorageAccount.json')]",
     "publicIPTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('publicIPNewOrExisting'), 'PublicIP.json')]",
 
     "dns": "[parameters('dnsNameForPublicIP')]",
