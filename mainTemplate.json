@@ -529,7 +529,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
-              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(variables('jenkinsAdminPassword')))]"
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(parameters('jenkinsAdminPassword')))]"
             }
           }
         }
