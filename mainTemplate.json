@@ -107,7 +107,7 @@
 
   "variables": {
     "location": "[parameters('location')]",
-    "subscription" : "[subscription().subscriptionId)]",
+    "subscription" : "[subscription().subscriptionId]",
 
     "clusterSpecStarter": {
       "numberOfMasters": 1,
