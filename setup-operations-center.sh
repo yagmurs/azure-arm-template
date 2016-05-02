@@ -10,7 +10,7 @@ set -e
 # Azure ARM setup script to prepare a CJOC VM for integration within CJP
 #
 # usage:
-#   setup-operations-center.sh <number_of_masters> <dns_domain_name> <template_root_url> <subscriptionId>
+#   setup-operations-center.sh <number_of_masters> <dns_domain_name> <template_root_url> <subscriptionId> <adminPassword>
 #
 
 
@@ -27,6 +27,7 @@ masters=$1
 domain=$2
 rooturl=$3
 subscription=$4
+adminPassword=$5
 
 # unique ID of this VM
 uuid=`dmidecode -s system-uuid`
@@ -42,10 +43,14 @@ chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/plugins/operations-center-market
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
 curl $rooturl/oc-init-masters.groovy -o $INIT
-
 sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
-
 chown jenkins-oc:jenkins-oc $INIT
+
+INIT=/var/lib/jenkins-oc/init.groovy.d/security-realm-azure.groovy
+curl $rooturl/security-realm-azure.groovy -o $INIT
+sed -i "s/__REPLACE_WITH_PASSWORD__/$adminPassword/" "$INIT"
+chown jenkins-oc:jenkins-oc $INIT
+
 
 # Configure Jenkins root URL
 echo "<?xml version='1.0' encoding='UTF-8'?>

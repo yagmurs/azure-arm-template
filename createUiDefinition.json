@@ -52,6 +52,18 @@
           "hideConfirmation": false
         },
         "osPlatform": "Linux"
+      },
+      {
+        "name": "jenkinsAdminPassword",
+        "type": "Microsoft.Common.PasswordBox",
+        "label": {
+          "password": "Jenkins administrator password",
+          "confirmPassword": "Confirm password"
+        },
+        "toolTip": "Password for the 'admin' user on Jenkins for initial security setup.",
+        "constraints": {
+          "required": true
+        }
       }
     ],
     "steps": [
@@ -151,6 +163,7 @@
 
       "size": "[basics('size')]",
       "vmSize": "[steps('size').vmSize]",
+      "jenkinsAdminPassword" : "[basics('jenkinsAdminPassword')]",
 
       "location": "[location()]"
     }

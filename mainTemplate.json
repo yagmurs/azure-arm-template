@@ -76,6 +76,13 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "jenkinsAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Password for the 'admin' user on jenkins initial security setup."
+      }
+    },
     "vmSize": {
       "type": "string",
       "metadata": {
@@ -522,7 +529,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
-              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'))]"
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(variables('jenkinsAdminPassword')))]"
             }
           }
         }
