@@ -62,6 +62,19 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 
 chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/jenkins.model.JenkinsLocationConfiguration.xml
 
+# Configure security
+echo "<?xml version='1.0' encoding='UTF-8'?>
+<com.cloudbees.opscenter.server.security.SecurityEnforcer_-GlobalConfigurationImpl>
+  <global class='com.cloudbees.opscenter.server.sso.SecurityEnforcerImpl' >
+    <canOverride>false</canOverride>
+    <canCustomMapping>false</canCustomMapping>
+    <defaultMappingFactory class='com.cloudbees.opscenter.server.security.TrustedEquivalentRAMF' />
+  </global>
+</com.cloudbees.opscenter.server.security.SecurityEnforcer_-GlobalConfigurationImpl>"  \
+> /var/lib/jenkins-oc/com.cloudbees.opscenter.server.security.SecurityEnforcer\$GlobalConfigurationImpl.xml
+
+chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/com.cloudbees.opscenter.server.security.SecurityEnforcer\$GlobalConfigurationImpl.xml
+
 echo "Azure Marketplace" > /var/lib/jenkins-oc/.cloudbees-referrer.txt
 echo "    subscriptionId: $subscription" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
 
