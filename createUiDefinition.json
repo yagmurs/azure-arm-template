@@ -92,6 +92,29 @@
         ]
       },
       {
+        "name": "security",
+        "label": "Security",
+        "subLabel": {
+          "preValidation": "Required",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Security",
+        "elements": [
+          {
+            "name": "jenkinsAdminPassword",
+            "type": "Microsoft.Common.PasswordBox",
+            "label": {
+              "password": "Jenkins administrator password",
+              "confirmPassword": "Confirm password"
+            },
+            "toolTip": "Password for the 'admin' user on Jenkins for initial security setup.",
+            "constraints": {
+              "required": true
+            }
+          }
+        ]
+      },
+      {
         "name": "deploymentDetails",
         "label": "Deployment Parameters",
         "subLabel": {
@@ -159,6 +182,7 @@
 
       "size": "[basics('size')]",
       "vmSize": "[steps('size').vmSize]",
+      "jenkinsAdminPassword" : "[steps('security').jenkinsAdminPassword]",
 
       "location": "[location()]"
     }

@@ -76,6 +76,13 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "jenkinsAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Password for the 'admin' user on jenkins initial security setup."
+      }
+    },
     "vmSize": {
       "type": "string",
       "metadata": {
@@ -94,6 +101,7 @@
 
   "variables": {
     "location": "[parameters('location')]",
+    "subscription" : "[subscription().subscriptionId]",
 
     "storageTemplateLink": "[concat(parameters('templateBaseUrl'), '/newStorageAccount.json')]",
     "publicIPTemplateLink": "[concat(parameters('templateBaseUrl'), '/', parameters('publicIPNewOrExisting'), 'PublicIP.json')]",
@@ -367,7 +375,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh')]" ],
-              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
+              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'))]"
             }
           }
         }
@@ -494,7 +502,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
-              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'))]"
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(parameters('jenkinsAdminPassword')))]"
             }
           }
         }

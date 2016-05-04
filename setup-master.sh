@@ -10,12 +10,13 @@ set -e
 # Azure ARM setup script to prepare a CJE VM for integration for integration within CJP
 #
 # usage:
-#   setup-master.sh <index_of_master_node> <dns_domain_name> <template_root_url>
+#   setup-master.sh <index_of_master_node> <dns_domain_name> <template_root_url> <subscriptionId>
 #
 
 index=$1
 domain=$2
 rooturl=$3
+subscription=$4
 
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details
@@ -47,5 +48,8 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 > /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
 
 chown jenkins:jenkins /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
+
+echo "Azure Marketplace" > /var/lib/jenkins/.cloudbees-referrer.txt
+echo "    subscriptionId: $subscription" >> /var/lib/jenkins/.cloudbees-referrer.txt
 
 /etc/init.d/jenkins restart
