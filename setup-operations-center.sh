@@ -20,9 +20,6 @@ function finish {
 }
 trap finish EXIT
 
-# FIXME refresh VM image ?
-apt-get update ; apt-get install -y --only-upgrade walinuxagent
-
 masters=$1
 domain=$2
 rooturl=$3
