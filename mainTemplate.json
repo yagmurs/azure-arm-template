@@ -101,7 +101,87 @@
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
       }
-    }
+    },
+    "company": {
+      "type": "string",
+      "defaultValue": "Company",
+      "metadata": {
+        "description": "Your Company"
+      }
+    },
+    "emailAddress": {
+      "type": "string",
+      "defaultValue": "email@yourcompany.com",
+      "metadata": {
+        "description": "your email"
+      }
+    },
+    "businessPhone": {
+      "type": "string",
+      "defaultValue": "123456789",
+      "metadata": {
+        "description": "your business phone number"
+      }
+    },
+    "firstName": {
+      "type": "string",
+      "defaultValue": "FirstName",
+      "metadata": {
+        "description": "Your FirstName"
+      }
+    },
+    "lastName": {
+      "type": "string",
+      "defaultValue": "LastName",
+      "metadata": {
+        "description": "Your LastName"
+      }
+    },
+    "jobRole": {
+      "type": "string",
+      "defaultValue": "Administrator",
+      "metadata": {
+        "description": "Job Role"
+      },
+      "allowedValues": [
+        "Administrator",
+        "Analyst (Industry/Finance)",
+        "Analyst (Technical)",
+        "Architect",
+        "C level",
+        "Consultant",
+        "Developer",
+        "Director",
+        "Engineer",
+        "Individual contributor",
+        "Manager",
+        "Partner",
+        "Student",
+        "VP"
+      ]
+    },
+    "jobFunction": {
+      "type": "string",
+      "defaultValue": "Analytics / Business Intelligence",
+      "metadata": {
+        "description": "Job Function"
+      },
+      "allowedValues": [
+        "Analytics / Business Intelligence",
+        "Big Data / Architecture",
+        "Data Warehouse / Management",
+        "Data Science",
+        "Database",
+        "ETL / ELT",
+        "Infrastructure",
+        "IT",
+        "Marketing / Sales",
+        "Networking",
+        "Manager",
+        "Security / Compliance",
+        "Storage"
+      ]
+    },
   },
 
 
