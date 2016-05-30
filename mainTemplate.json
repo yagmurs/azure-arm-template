@@ -92,11 +92,13 @@
     },
     "size": {
       "type": "string",
-      "defaultValue": "Starter",
+      "defaultValue": "Solo",
       "allowedValues": [
-        "Starter",
-        "Medium",
-        "Large"
+        "Solo",
+        "Project",
+        "Team",
+        "Workgroup",
+        "Pro"
       ],
       "metadata": {
           "description": "Size of your CloudBees Jenkins Platform deployment."
@@ -109,20 +111,30 @@
     "location": "[parameters('location')]",
     "subscription" : "[subscription().subscriptionId]",
 
-    "clusterSpecStarter": {
+    "clusterSpecSolo": {
       "numberOfMasters": 1,
-      "numberOfExecutors": 10,
-      "vmImageSku": "jenkins-operations-center-small"
+      "numberOfExecutors": 1,
+      "vmImageSku": "jenkins-operations-center-solo"
     },
-    "clusterSpecMedium": {
+    "clusterSpecProject": {
+      "numberOfMasters": 1,
+      "numberOfExecutors": 5,
+      "vmImageSku": "jenkins-operations-center-project"
+    },
+    "clusterSpecTeam": {
       "numberOfMasters": 2,
-      "numberOfExecutors": 40,
-      "vmImageSku": "jenkins-operations-center-medium"
-      },
-    "clusterSpecLarge": {
+      "numberOfExecutors": 10,
+      "vmImageSku": "jenkins-operations-center-team"
+    },
+    "clusterSpecWorkgroup": {
       "numberOfMasters": 5,
+      "numberOfExecutors": 25,
+      "vmImageSku": "jenkins-operations-center-workgroup"
+    },
+    "clusterSpecPro": {
+      "numberOfMasters": 10,
       "numberOfExecutors": 100,
-      "vmImageSku": "jenkins-operations-center-large"
+      "vmImageSku": "jenkins-operations-center-pro"
     },
     "clusterSpec": "[variables(concat('clusterSpec', parameters('size')))]",
 

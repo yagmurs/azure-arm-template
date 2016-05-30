@@ -11,16 +11,24 @@
         "constraints": {
           "allowedValues": [
             {
-              "label": "Starter (1 master, 10 executors)",
-              "value": "Starter"
+              "label": "Solo (1 master, 1 executors)",
+              "value": "Solo"
             },
             {
-              "label": "Medium (2 masters, 40 executors)",
-              "value": "Medium"
+              "label": "Project (1 masters, 5 executors)",
+              "value": "Project"
             },
             {
-              "label": "Large (5 masters, 100 executors)",
-              "value": "Large"
+              "label": "Team (2 masters, 10 executors)",
+              "value": "Team"
+            },
+            {
+              "label": "Workgroup (5 masters, 25 executors)",
+              "value": "Workgroup"
+            },
+            {
+              "label": "Pro (10 masters, 100 executors)",
+              "value": "Pro"
             }
           ]
         }
