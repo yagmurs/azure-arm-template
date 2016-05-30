@@ -413,7 +413,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-master.sh')]" ],
-              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'))]"
+              "commandToExecute": "[concat('bash setup-master.sh ', copyIndex(), ' ', variables('size'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'))]"
             }
           }
         }
@@ -541,7 +541,7 @@
             "typeHandlerVersion": "1.4",
             "settings": {
               "fileUris": [ "[concat(parameters('templateBaseUrl'), '/setup-operations-center.sh')]" ],
-              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(parameters('jenkinsAdminPassword')))]"
+              "commandToExecute": "[concat('bash setup-operations-center.sh ', variables('size'), ' ', variables('mastersCount'), ' ', variables('FQdns'), ' ', parameters('templateBaseUrl'), ' ', variables('subscription'), ' ', base64(parameters('jenkinsAdminPassword')))]"
             }
           }
         }

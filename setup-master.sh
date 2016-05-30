@@ -14,9 +14,10 @@ set -e
 #
 
 index=$1
-domain=$2
-rooturl=$3
-subscription=$4
+size=$2
+domain=$3
+rooturl=$4
+subscription=$5
 
 
 # Install licensing plugin
@@ -59,6 +60,7 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 chown jenkins:jenkins /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
 
 echo "Azure Marketplace" > /var/lib/jenkins/.cloudbees-referrer.txt
+echo "    size: $size" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
 echo "    subscriptionId: $subscription" >> /var/lib/jenkins/.cloudbees-referrer.txt
 
 /etc/init.d/jenkins restart

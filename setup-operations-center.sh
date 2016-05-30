@@ -20,11 +20,12 @@ function finish {
 }
 trap finish EXIT
 
-masters=$1
-domain=$2
-rooturl=$3
-subscription=$4
-adminPassword=$5
+size=$1
+masters=$2
+domain=$3
+rooturl=$4
+subscription=$5
+adminPassword=$6
 
 # unique ID of this VM
 uuid=`dmidecode -s system-uuid`
@@ -73,6 +74,7 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/com.cloudbees.opscenter.server.security.SecurityEnforcer\$GlobalConfigurationImpl.xml
 
 echo "Azure Marketplace" > /var/lib/jenkins-oc/.cloudbees-referrer.txt
+echo "    size: $size" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
 echo "    subscriptionId: $subscription" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
 
 /etc/init.d/jenkins-oc restart
