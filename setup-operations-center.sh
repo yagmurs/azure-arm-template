@@ -27,6 +27,11 @@ rooturl=$4
 subscription=$5
 adminPassword=$6
 
+# Workaround until VM images on marketplace are up-to-date
+sudo apt-get -yq update
+sudo apt-get -yq install jenkins-oc
+
+
 # unique ID of this VM
 uuid=`dmidecode -s system-uuid`
 # Allow jenkins user to run `sudo dmidecode`
