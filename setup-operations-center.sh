@@ -19,11 +19,6 @@ rooturl=$3
 subscription=$4
 adminPassword=$5
 
-
-# Workaround until VM images on marketplace are up-to-date
-sudo apt-get -yq update
-sudo apt-get -yq install jenkins-oc
-
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
 curl $rooturl/oc-init-masters.groovy -o $INIT
 sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
