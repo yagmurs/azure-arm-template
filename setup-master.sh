@@ -60,7 +60,7 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 chown jenkins:jenkins /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
 
 echo "Azure Marketplace" > /var/lib/jenkins/.cloudbees-referrer.txt
-echo "    size: $size" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
+echo "    size: $size" >> /var/lib/jenkins/.cloudbees-referrer.txt
 echo "    subscriptionId: $subscription" >> /var/lib/jenkins/.cloudbees-referrer.txt
 
 /etc/init.d/jenkins restart
