@@ -6,7 +6,7 @@ set -e
 # Copyright (c) 2016, CloudBees, Inc.
 #
 
-# 
+#
 # Azure ARM setup script to prepare a CJE VM for integration for integration within CJP
 #
 # usage:
@@ -25,7 +25,7 @@ mkdir -p /var/lib/jenkins/plugins
 touch /var/lib/jenkins/plugins/cloudbees-license.jpi.pinned
 curl $rooturl/cloudbees-license.hpi -o /var/lib/jenkins/plugins/cloudbees-license.jpi
 curl $rooturl/client-master-marketplace-licensing.hpi -o /var/lib/jenkins/plugins/client-master-marketplace-licensing.hpi
-chown -R jenkins:jenkins /var/lib/jenkins/
+chown -Rf jenkins:jenkins /var/lib/jenkins/
 
 
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
