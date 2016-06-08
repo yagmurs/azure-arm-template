@@ -11,23 +11,23 @@
         "constraints": {
           "allowedValues": [
             {
-              "label": "Solo (1 master, 1 executors)",
+              "label": "Solo (1 master, 1 executor : $0.25/hr + VM cost)",
               "value": "Solo"
             },
             {
-              "label": "Project (1 masters, 5 executors)",
+              "label": "Project (1 masters, 5 executors : $1.00/hr + VM cost)",
               "value": "Project"
             },
             {
-              "label": "Team (2 masters, 10 executors)",
+              "label": "Team (2 masters, 10 executors : $2.35/hr + VM cost)",
               "value": "Team"
             },
             {
-              "label": "Workgroup (5 masters, 25 executors)",
+              "label": "Workgroup (5 masters, 25 executors : $5.54/hr + VM cost)",
               "value": "Workgroup"
             },
             {
-              "label": "Pro (10 masters, 100 executors)",
+              "label": "Pro (10 masters, 100 executors : $12.47/hr + VM cost)",
               "value": "Pro"
             }
           ]
@@ -131,18 +131,20 @@
               "domainNameLabel": "CloudBees Jenkins Operations Center domain name"
             },
             "toolTip": {
-              "publicIpAddress": "",
-              "domainNameLabel": ""
+              "domainNameLabel": "Your CloudBees Jenkins Operation Center instance will be available as http://{domain}.{location}.cloudapp.azure.com. Your CloudBees Jenkins Enterprise instances will be available as http://{domain}-{n}.{location}.cloudapp.azure.com."
             },
             "constraints": {
               "required": {
                 "domainNameLabel": true
               }
             },
+            "defaultValue": {
+              "publicIpAddress": "publicIP"
+            },
             "options": {
               "hideNone": true,
               "hideDomainNameLabel": false,
-              "hideExisting": false
+              "hideExisting": true
             }
           },
           {
