@@ -36,8 +36,6 @@ echo "jenkins-oc ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode" >> /etc/sudoers.d/dmid
 cat /var/lib/waagent/ovf-env.xml | xml2 | sed -n 's/^.*CustomData=//p' | base64 --decode | openssl enc -des3 -k $uuid  -out /var/lib/jenkins-oc/license.des
 
 # Install licensing plugin
-touch /var/lib/jenkins-oc/plugins/cloudbees-license.jpi.pinned
-curl $rooturl/cloudbees-license.hpi -o /var/lib/jenkins-oc/plugins/cloudbees-license.jpi
 curl $rooturl/operations-center-marketplace-licensing.hpi -o /var/lib/jenkins-oc/plugins/operations-center-marketplace-licensing.hpi
 
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
