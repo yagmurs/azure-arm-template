@@ -24,7 +24,7 @@ masters.times {
         cm.save();
 
         // Mark this item as "built-in" so this doesn't disable setup wizard
-        new File(cm.rootDir, ".builtIn").createNewFile())
+        new File(cm.rootDir, ".builtIn").createNewFile()
     }
 
 }
