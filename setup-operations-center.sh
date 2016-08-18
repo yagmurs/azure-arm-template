@@ -20,12 +20,13 @@ function finish {
 }
 trap finish EXIT
 
-size=$1
-masters=$2
-domain=$3
+masters=$1
+domain=$2
+adminPassword=$3
 rooturl=$4
+# Used as cloudbees-referrer so support get infos on actual subscription
 subscription=$5
-adminPassword=$6
+size=$6
 
 # unique ID of this VM
 uuid=`dmidecode -s system-uuid`
@@ -46,9 +47,6 @@ INIT=/var/lib/jenkins-oc/init.groovy.d/security-realm-azure.groovy
 curl $rooturl/security-realm-azure.groovy -o $INIT
 sed -i "s/__REPLACE_WITH_PASSWORD__/$adminPassword/" "$INIT"
 
-chown -R jenkins-oc:jenkins-oc /var/lib/jenkins-oc/
-
-
 # Configure Jenkins root URL
 echo "<?xml version='1.0' encoding='UTF-8'?>
 <jenkins.model.JenkinsLocationConfiguration>
@@ -56,8 +54,6 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
   <jenkinsUrl>http://$domain/</jenkinsUrl>
 </jenkins.model.JenkinsLocationConfiguration>"                                      \
 > /var/lib/jenkins-oc/jenkins.model.JenkinsLocationConfiguration.xml
-
-chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/jenkins.model.JenkinsLocationConfiguration.xml
 
 # Configure security
 echo "<?xml version='1.0' encoding='UTF-8'?>
@@ -70,7 +66,7 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 </com.cloudbees.opscenter.server.security.SecurityEnforcer_-GlobalConfigurationImpl>"  \
 > /var/lib/jenkins-oc/com.cloudbees.opscenter.server.security.SecurityEnforcer\$GlobalConfigurationImpl.xml
 
-chown jenkins-oc:jenkins-oc /var/lib/jenkins-oc/com.cloudbees.opscenter.server.security.SecurityEnforcer\$GlobalConfigurationImpl.xml
+chown -R jenkins-oc:jenkins-oc /var/lib/jenkins-oc/
 
 echo "Azure Marketplace" > /var/lib/jenkins-oc/.cloudbees-referrer.txt
 echo "    size: $size" >> /var/lib/jenkins-oc/.cloudbees-referrer.txt
