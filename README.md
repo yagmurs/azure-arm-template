@@ -30,7 +30,7 @@ But on can test the technical ARM template and the UI definition using those lin
 
 UI definition can be tested from last commit on github using : 
 
-<a href='https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2Fcloudbees%2Fazure-arm-template%2Fmaster%2FcreateUiDefinition.json"}}' target="_blank">
+<a href='https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2Fcloudbees%2Fazure-arm-template%2Fpreview%2FcreateUiDefinition.json"}}' target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -47,7 +47,7 @@ azure group deployment create test123 --template-file mainTemplate.json --parame
 
 Can also run the template with some UI definition from last commit on github using : 
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fcloudbees%2Fazure-arm-template%2Fmaster%2FmainTemplate.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fcloudbees%2Fazure-arm-template%2Fpreview%2FmainTemplate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
