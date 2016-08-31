@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 #
 # Copyright (c) 2016, CloudBees, Inc.
