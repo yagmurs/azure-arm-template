@@ -23,7 +23,7 @@ subscription=$5
 
 # Install licensing plugin
 mkdir -p /var/lib/jenkins/plugins
-curl $rooturl/client-master-marketplace-licensing.hpi -o /var/lib/jenkins/plugins/client-master-marketplace-licensing.hpi
+curl http://jenkins-updates.cloudbees.com/download/plugins/client-master-marketplace-licensing/1.1/client-master-marketplace-licensing.hpi -o /var/lib/jenkins/plugins/client-master-marketplace-licensing.hpi
 chown -R jenkins:jenkins /var/lib/jenkins/
 
 
