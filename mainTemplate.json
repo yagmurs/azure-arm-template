@@ -377,7 +377,7 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "cloudbees",
-            "offer": "jenkins-enterprise",
+            "offer": "jenkins-enterprise-preview",
             "sku": "jenkins-enterprise",
             "version": "latest"
           },
@@ -505,7 +505,7 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "cloudbees",
-            "offer": "jenkins-operations-center",
+            "offer": "jenkins-operations-center-preview",
             "sku": "[variables('sku')]",
             "version": "latest"
           },
