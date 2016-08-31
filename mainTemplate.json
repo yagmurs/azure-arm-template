@@ -362,7 +362,7 @@
       "plan": {
         "name": "jenkins-enterprise",
         "publisher": "cloudbees",
-        "product": "jenkins-enterprise"
+        "product": "jenkins-enterprise-preview"
       },
       "properties": {
         "hardwareProfile": {
@@ -489,7 +489,7 @@
       "plan": {
         "name": "[variables('sku')]",
         "publisher": "cloudbees",
-        "product": "jenkins-operations-center"
+        "product": "jenkins-operations-center-preview"
       },
       "properties": {
         "hardwareProfile": {
