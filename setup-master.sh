@@ -21,12 +21,6 @@ rooturl=$4
 subscription=$5
 
 
-# Install licensing plugin
-mkdir -p /var/lib/jenkins/plugins
-curl http://jenkins-updates.cloudbees.com/download/plugins/client-master-marketplace-licensing/1.1/client-master-marketplace-licensing.hpi -o /var/lib/jenkins/plugins/client-master-marketplace-licensing.hpi
-chown -R jenkins:jenkins /var/lib/jenkins/
-
-
 CFG="/var/lib/jenkins/com.cloudbees.opscenter.client.plugin.OperationsCenterRootAction.xml"
 # Inject openration center connection details
 echo "<?xml version='1.0' encoding='UTF-8'?>
