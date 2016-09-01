@@ -36,9 +36,6 @@ echo "jenkins-oc ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode" >> /etc/sudoers.d/dmid
 # Extract licensing metadata from CloudInit config and inject as encrypted file to discourage (bad) hackers
 cat /var/lib/waagent/ovf-env.xml | xml2 | sed -n 's/^.*CustomData=//p' | base64 --decode | openssl enc -des3 -k $uuid  -out /var/lib/jenkins-oc/license.des
 
-# Install licensing plugin
-curl http://jenkins-updates.cloudbees.com/download/plugins/operations-center-marketplace-licensing/1.1/operations-center-marketplace-licensing.hpi -o /var/lib/jenkins-oc/plugins/operations-center-marketplace-licensing.hpi
-
 INIT=/var/lib/jenkins-oc/init.groovy.d/oc-init-masters.groovy
 curl $rooturl/oc-init-masters.groovy -o $INIT
 sed -i "s/__REPLACE_WITH_MASTERS_COUNT__/$masters/" "$INIT"
