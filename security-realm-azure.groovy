@@ -24,17 +24,13 @@ def jenkins = Jenkins.getInstance()
 BulkChange bulkChange = new BulkChange(jenkins)
 try {
 
-    if (NO_AUTHENTICATION.equals(jenkins.getSecurityRealm())) {
-        // Set security realm to User Database, with sign-up disabled.
-        def realm = new HudsonPrivateSecurityRealm(false, false, null)
-        realm.createAccount("admin", new String( Base64.decodeBase64("__REPLACE_WITH_PASSWORD__") ))
-        jenkins.setSecurityRealm(realm)
-    }
+    // Set security realm to User Database, with sign-up disabled.
+    def realm = new HudsonPrivateSecurityRealm(false, false, null)
+    realm.createAccount("admin", new String( Base64.decodeBase64("__REPLACE_WITH_PASSWORD__") ))
+    jenkins.setSecurityRealm(realm)
 
     // User can do anything when logged in - including change security settings.
-    if (UNSECURED.equals(jenkins.getAuthorizationStrategy())) {
-        jenkins.setAuthorizationStrategy(new FullControlOnceLoggedInAuthorizationStrategy())
-    }
+    jenkins.setAuthorizationStrategy(new FullControlOnceLoggedInAuthorizationStrategy())
 
     bulkChange.commit()
     println "[azure-security-realm] Jenkins has been secured, can login as 'admin' and password set from ARM template"
