@@ -131,18 +131,20 @@
               "domainNameLabel": "CloudBees Jenkins Operations Center domain name"
             },
             "toolTip": {
-              "publicIpAddress": "",
-              "domainNameLabel": ""
+              "domainNameLabel": "Your CloudBees Jenkins Operation Center instance will be available as http://{domain}.{location}.cloudapp.azure.com. Your CloudBees Jenkins Enterprise instances will be available as http://{domain}-{n}.{location}.cloudapp.azure.com."
             },
             "constraints": {
               "required": {
                 "domainNameLabel": true
               }
             },
+            "defaultValue": {
+              "publicIpAddress": "publicIP"
+            },
             "options": {
               "hideNone": true,
               "hideDomainNameLabel": false,
-              "hideExisting": false
+              "hideExisting": true
             }
           },
           {

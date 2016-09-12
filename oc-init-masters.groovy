@@ -22,6 +22,9 @@ masters.times {
         cm.getProperties().replace(new ConnectedMasterLicenseServerProperty(new ConnectedMasterLicenseServerProperty.FloatingExecutorsStrategy()));
         cm.getProperties().replace(new SecurityEnforcer.OptOutProperty(false, true, new TrustedEquivalentRAMF()));
         cm.save();
+
+        // Mark this item as "built-in" so this doesn't disable setup wizard
+        new File(cm.rootDir, ".builtIn").createNewFile()
     }
 
 }
