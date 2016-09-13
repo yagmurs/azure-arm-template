@@ -223,7 +223,7 @@
               "description": "Allows JNLP traffic",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "10000",
+              "destinationPortRange": "50000",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
