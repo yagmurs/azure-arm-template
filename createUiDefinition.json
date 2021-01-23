@@ -1,53 +1,86 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-  "handler": "Microsoft.Azure.CreateUIDef",
+  "handler": "Microsoft.Compute.MultiVm",
   "version": "0.1.2-preview",
   "parameters": {
-    "resourceTypes": ["Microsoft.Compute/disks", "Microsoft.Compute"],
     "basics": [
       {
-          "name": "textBox1",
-          "type": "Microsoft.Common.TextBox",
-          "label": "Textbox on basics",
-          "defaultValue": "my text value",
-          "toolTip": "",
-          "visible": true
+        "name": "size",
+        "type": "Microsoft.Common.DropDown",
+        "label": "Deployment size",
+        "defaultValue": "Starter",
+        "constraints": {
+          "allowedValues": [
+            {
+              "label": "Solo (1 master, 1 executor : $0.25/hr + VM cost)",
+              "value": "Solo"
+            },
+            {
+              "label": "Project (1 masters, 5 executors : $1.00/hr + VM cost)",
+              "value": "Project"
+            }
+          ]
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "VM username",
+        "toolTip": "Administrative username for the virtual machines.",
+        "osPlatform": "Linux",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z][-a-z0-9]*$"
+        }
+      },
+      {
+        "name": "adminCredentials",
+        "type": "Microsoft.Compute.CredentialsCombo",
+        "label": {
+          "authenticationType": "Authentication type",
+          "password": "Password",
+          "confirmPassword": "Confirm password",
+          "sshPublicKey": "SSH public key"
+        },
+        "constraints": {
+          "required": true
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+        "osPlatform": "Linux"
       }
     ],
     "steps": [
       {
-          "name": "demoConfig",
-          "label": "Configuration settings",
-          "elements": [
-            {
-              "name": "legalAccept",
-              "type": "Microsoft.Common.CheckBox",
-              "label": "I agree to the terms and conditions.",
-              "constraints": {
-                  "required": true,
-                  "validationMessage": "Please acknowledge the legal conditions."
-              }
-            },
-            {
-              "name": "element1",
-              "type": "Microsoft.Common.TextBox",
-              "label": "Some text box",
-              "defaultValue": "my value",
-              "toolTip": "Provide a descriptive name.",
-              "constraints": {},
-              "options": {},
-              "visible": true
+        "name": "ahmet1",
+        "label": "ahmet2",
+        "subLabel": {
+          "preValidation": "Choose virtual machine size",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "ahmet3",
+        "elements": [
+          {
+            "name": "vmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "VM size",
+            "toolTip": "The size of virtual machines.",
+            "recommendedSizes": [
+              "Standard_A2",
+              "Standard_A3",
+              "Standard_A4"
+            ],
+            "osPlatform": "Windows",
+            "imageReference": {
+              "publisher": "windows ",
+              "offer": "AzureStackHcionAzureVM",
+              "sku": "AzureStackHcionAzureVM"
             }
-          ]
+          }
+        ]
       }
     ],
     "outputs": {
-      "vmName": "[steps('appSettings').vmName]",
-      "trialOrProduction": "[steps('appSettings').trialOrProd]",
-      "userName": "[steps('vmCredentials').adminUsername]",
-      "pwd": "[steps('vmCredentials').vmPwd.password]",
-      "applicationResourceName": "[steps('appSettings').vmName]"
-    },
-      "resourceTypes": [ ]
+    }
   }
 }
