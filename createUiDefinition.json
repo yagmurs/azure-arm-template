@@ -7,7 +7,9 @@
         "name": "size",
         "type": "Microsoft.Common.DropDown",
         "label": "Deployment size",
-        "defaultValue": "Starter"
+        "defaultValue": "Starter",
+        "constraints": {
+        }
       },
       {
         "name": "adminUsername",
