@@ -161,9 +161,7 @@
 
       "size": "[basics('size')]",
       "vmSize": "[steps('size').vmSize]",
-      "jenkinsAdminPassword" : "[steps('security').jenkinsAdminPassword]",
-
-      "location": "[location()]"
+            "location": "[location()]"
     }
   }
 }
