@@ -4,19 +4,19 @@
   "parameters": {
     "basics": [
       {
-        "name": "size",
+        "name": "type",
         "type": "Microsoft.Common.DropDown",
-        "label": "Deployment size",
-        "defaultValue": "Starter",
+        "label": "Deployment Type",
+        "defaultValue": "AksHcionAzureVM",
         "constraints": {
           "allowedValues": [
             {
-              "label": "Solo (1 master, 1 executor : $0.25/hr + VM cost)",
-              "value": "Solo"
+              "label": "Aks (Aks Hci) on Azure VM (selfhost)",
+              "value": "AksHcionAzureVM"
             },
             {
-              "label": "Project (1 masters, 5 executors : $1.00/hr + VM cost)",
-              "value": "Project"
+              "label": "Azure Stack Hci on Azure VM (Nested)",
+              "value": "AzureStackHci"
             }
           ]
         }
@@ -26,7 +26,7 @@
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "VM username",
         "toolTip": "Administrative username for the virtual machines.",
-        "osPlatform": "Linux",
+        "osPlatform": "Windows",
         "constraints": {
           "required": true,
           "regex": "^[a-z][-a-z0-9]*$"
@@ -38,8 +38,7 @@
         "label": {
           "authenticationType": "Authentication type",
           "password": "Password",
-          "confirmPassword": "Confirm password",
-          "sshPublicKey": "SSH public key"
+          "confirmPassword": "Confirm password"
         },
         "constraints": {
           "required": true
@@ -47,18 +46,18 @@
         "options": {
           "hideConfirmation": false
         },
-        "osPlatform": "Linux"
+        "osPlatform": "Windows"
       }
     ],
     "steps": [
       {
-        "name": "ahmet1",
-        "label": "ahmet2",
+        "name": "Deployment Parameters",
+        "label": "Deployment Parameters",
         "subLabel": {
           "preValidation": "Choose virtual machine size",
           "postValidation": "Done"
         },
-        "bladeTitle": "ahmet3",
+        "bladeTitle": "Deployment Parameters",
         "elements": [
           {
             "name": "vmSize",
@@ -66,21 +65,25 @@
             "label": "VM size",
             "toolTip": "The size of virtual machines.",
             "recommendedSizes": [
-              "Standard_A2",
-              "Standard_A3",
-              "Standard_A4"
+              "Standard_E8s_v4",
+              "Standard_E16s_v4",
+              "Standard_E20s_v4",
+              "Standard_E32s_v4"
             ],
             "osPlatform": "Windows",
             "imageReference": {
-              "publisher": "windows ",
-              "offer": "AzureStackHcionAzureVM",
-              "sku": "AzureStackHcionAzureVM"
+              "publisher": "windows",
+              "offer": "AksHcionAzureVM",
+              "sku": "AksHcionAzureVM"
             }
           }
         ]
       }
     ],
     "outputs": {
+      "DSC": "[basics('type')]",
+      "userName": "[basics('adminUsername')]",
+      "pwd": "[basics('adminCredentials')]"
     }
   }
 }
