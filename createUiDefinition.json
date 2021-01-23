@@ -1,180 +1,53 @@
 {
-  "handler": "Microsoft.Compute.MultiVm",
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
   "version": "0.1.2-preview",
   "parameters": {
+    "resourceTypes": ["Microsoft.Compute/disks", "Microsoft.Compute"],
     "basics": [
       {
-        "name": "size",
-        "type": "Microsoft.Common.DropDown",
-        "label": "Deployment size",
-        "defaultValue": "Starter",
-        "constraints": {
-          "allowedValues": [
-            {
-              "label": "Solo (1 master, 1 executor : $0.25/hr + VM cost)",
-              "value": "Solo"
-            },
-            {
-              "label": "Project (1 masters, 5 executors : $1.00/hr + VM cost)",
-              "value": "Project"
-            }
-          ]
-        }
-      },
-      {
-        "name": "adminUsername",
-        "type": "Microsoft.Compute.UserNameTextBox",
-        "label": "VM username",
-        "toolTip": "Administrative username for the virtual machines.",
-        "osPlatform": "Linux",
-        "constraints": {
-          "required": true,
-          "regex": "^[a-z][-a-z0-9]*$"
-        }
-      },
-      {
-        "name": "adminCredentials",
-        "type": "Microsoft.Compute.CredentialsCombo",
-        "label": {
-          "authenticationType": "Authentication type",
-          "password": "Password",
-          "confirmPassword": "Confirm password",
-          "sshPublicKey": "SSH public key"
-        },
-        "constraints": {
-          "required": true
-        },
-        "options": {
-          "hideConfirmation": false
-        },
-        "osPlatform": "Linux"
+          "name": "textBox1",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Textbox on basics",
+          "defaultValue": "my text value",
+          "toolTip": "",
+          "visible": true
       }
     ],
     "steps": [
       {
-        "name": "size",
-        "label": "Size",
-        "subLabel": {
-          "preValidation": "Choose virtual machine size",
-          "postValidation": "Done"
-        },
-        "bladeTitle": "Size",
-        "elements": [
-          {
-            "name": "vmSize",
-            "type": "Microsoft.Compute.SizeSelector",
-            "label": "VM size",
-            "toolTip": "The size of virtual machines.",
-            "recommendedSizes": [
-              "Standard_A2",
-              "Standard_A3",
-              "Standard_A4"
-            ],
-            "osPlatform": "Linux",
-            "imageReference": {
-              "publisher": "cloudbees",
-              "offer": "jenkins-enterprise",
-              "sku": "jenkins-enterprise"
-            }
-          }
-        ]
-      },
-      {
-        "name": "security",
-        "label": "Security",
-        "subLabel": {
-          "preValidation": "Required",
-          "postValidation": "Done"
-        },
-        "bladeTitle": "Security",
-        "elements": [
-          {
-            "name": "jenkinsAdminPassword",
-            "type": "Microsoft.Common.PasswordBox",
-            "label": {
-              "password": "Jenkins administrator password",
-              "confirmPassword": "Confirm password"
-            },
-            "toolTip": "Password for the 'admin' user on Jenkins for initial security setup.",
-            "constraints": {
-              "required": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "deploymentDetails",
-        "label": "Deployment Parameters",
-        "subLabel": {
-          "preValidation": "Required",
-          "postValidation": "Done"
-        },
-        "bladeTitle": "Deployment Parameters",
-        "elements": [
-          {
-            "name": "publicIP",
-            "type": "Microsoft.Network.PublicIpAddressCombo",
-            "label": {
-              "publicIpAddress": "Public IP address",
-              "domainNameLabel": "CloudBees Jenkins Operations Center domain name"
-            },
-            "toolTip": {
-              "domainNameLabel": "Your CloudBees Jenkins Operation Center instance will be available as http://{domain}.{location}.cloudapp.azure.com. Your CloudBees Jenkins Enterprise instances will be available as http://{domain}-{n}.{location}.cloudapp.azure.com."
-            },
-            "constraints": {
-              "required": {
-                "domainNameLabel": true
+          "name": "demoConfig",
+          "label": "Configuration settings",
+          "elements": [
+            {
+              "name": "legalAccept",
+              "type": "Microsoft.Common.CheckBox",
+              "label": "I agree to the terms and conditions.",
+              "constraints": {
+                  "required": true,
+                  "validationMessage": "Please acknowledge the legal conditions."
               }
             },
-            "defaultValue": {
-              "publicIpAddress": "publicIP"
-            },
-            "options": {
-              "hideNone": true,
-              "hideDomainNameLabel": false,
-              "hideExisting": true
+            {
+              "name": "element1",
+              "type": "Microsoft.Common.TextBox",
+              "label": "Some text box",
+              "defaultValue": "my value",
+              "toolTip": "Provide a descriptive name.",
+              "constraints": {},
+              "options": {},
+              "visible": true
             }
-          },
-          {
-            "name": "storageAccount",
-            "type": "Microsoft.Storage.StorageAccountSelector",
-            "label": "Storage account",
-            "toolTip": "Storage Account for the Virtual Machine's Disks",
-            "defaultValue": {
-              "type": "Standard_LRS"
-            },
-            "constraints": {
-              "allowedTypes": [
-                "Standard_LRS",
-                "Standard_GRS"
-              ],
-              "required": true
-            },
-            "options": {
-              "hideExisting": true
-            }
-          }
-        ]
+          ]
       }
     ],
     "outputs": {
-      "storageAccountName": "[steps('deploymentDetails').storageAccount.name]",
-      "storageAccountType": "[steps('deploymentDetails').storageAccount.type]",
-
-      "publicIPNewOrExisting": "[steps('deploymentDetails').publicIP.newOrExistingOrNone]",
-      "publicIPName" : "[steps('deploymentDetails').publicIP.name]",
-      "dnsNameForPublicIP" : "[steps('deploymentDetails').publicIP.domainNameLabel]",
-
-      "adminUsername": "[basics('adminUsername')]",
-      "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "adminPassword": "[basics('adminCredentials').password]",
-      "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
-
-      "size": "[basics('size')]",
-      "vmSize": "[steps('size').vmSize]",
-      "jenkinsAdminPassword" : "[steps('security').jenkinsAdminPassword]",
-
-      "location": "[location()]"
-    }
+      "vmName": "[steps('appSettings').vmName]",
+      "trialOrProduction": "[steps('appSettings').trialOrProd]",
+      "userName": "[steps('vmCredentials').adminUsername]",
+      "pwd": "[steps('vmCredentials').vmPwd.password]",
+      "applicationResourceName": "[steps('appSettings').vmName]"
+    },
+      "resourceTypes": [ ]
   }
 }
