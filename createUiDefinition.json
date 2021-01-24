@@ -33,7 +33,7 @@
         }
       },
       {
-        "name": "adminCredentials",
+        "name": "adminPassword",
         "type": "Microsoft.Compute.CredentialsCombo",
         "label": {
           "authenticationType": "Authentication type",
@@ -83,7 +83,7 @@
     "outputs": {
       "DSC": "[basics('type')]",
       "userName": "[basics('adminUsername')]",
-      "pwd": "[basics('adminCredentials')]"
+      "adminPassword": "[basics('adminPassword')]"
     }
   }
 }
